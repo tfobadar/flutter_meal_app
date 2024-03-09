@@ -3,8 +3,7 @@ import 'package:meal_app/models/category.dart';
 
 class CategoryGridItem extends StatelessWidget {
   const CategoryGridItem(
-      {Key? key, required this.category, required this.onSelectedCategory})
-      : super(key: key);
+      {super.key, required this.category, required this.onSelectedCategory});
 
   final Category category;
   final void Function() onSelectedCategory;
@@ -29,7 +28,7 @@ class CategoryGridItem extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
           )),
     );
   }

@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/screens/meal_detail_screen.dart';
 import 'package:meal_app/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  MealsScreen({Key? key, required this.title, required this.meals})
-      : super(key: key);
+  const MealsScreen(
+      {super.key,
+      this.title,
+      required this.meals,
+      required this.onToggleFavorits});
 
-  final String title;
+  final String? title;
   final List<Meal> meals;
-
+  final void Function(Meal meal) onToggleFavorits;
   @override
   Widget build(BuildContext context) {
+    void mealDetail(BuildContext context, Meal meal) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MealDetailScreen(
+              meal: meal, onToggleFavorits: onToggleFavorits)));
+    }
+
     Widget content = ListView.builder(
       itemCount: meals.length,
-      itemBuilder: (ctx, index) => MealItem(meal: meals[index]),
+      itemBuilder: (ctx, index) => MealItem(
+        meal: meals[index],
+        onSelectMeal: () {
+          mealDetail(context, meals[index]);
+        },
+      ),
     );
     if (meals.isEmpty) {
       content = Center(
@@ -22,8 +37,10 @@ class MealsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Uh oh... nothing here',
-                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface)),
             const SizedBox(
               height: 16,
             ),
@@ -32,17 +49,19 @@ class MealsScreen extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
             )
           ],
         ),
       );
     }
-
+    if (title == null) {
+      return content;
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text(title),
+        title: Text(title!),
       ),
       body: content,
     );
